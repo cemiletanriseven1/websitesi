@@ -4,13 +4,14 @@ import {
     AppstoreOutlined, TeamOutlined, SettingOutlined,
     CalendarOutlined, FileTextOutlined, SoundOutlined, ShoppingOutlined,
     UserOutlined, DownOutlined, TagsOutlined,
-    MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined, HeartOutlined // ✅
+    MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined, HeartOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../features/auth';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import UserTable from '../table/UserTable';
 import ProductTable from '../table/ProductTable';
 import ProductsRoutes from '../features/products/ProductsRoutes';
+import DashboardPage from '../features/dashboard/pages/DashboardPage'; // ✅ dashboard
 import './sidebarlayout.css';
 
 const { Sider, Content } = Layout;
@@ -22,7 +23,7 @@ export default function SidebarLayout() {
 
     const [activeTab, setActiveTab] = useState<View>('kullanicilar');
     const [openKeys, setOpenKeys] = useState<string[]>(['kullanici-yonetimi']);
-    const [selectedKey, setSelectedKey] = useState<string>('kullanicilar');
+    const [selectedKey, setSelectedKey] = useState<string>('dashboard'); // ✅ başlangıç: dashboard
     const [userCount, setUserCount] = useState(0);
     const [productCount, setProductCount] = useState(0);
     const [collapsed, setCollapsed] = useState(false);
@@ -43,7 +44,7 @@ export default function SidebarLayout() {
         { key: 'belgeler', icon: <FileTextOutlined />, label: 'Belgeler' },
         { key: 'duyurular', icon: <SoundOutlined />, label: 'Duyurular' },
         { key: 'urunler-menu', icon: <ShoppingOutlined />, label: 'Ürünler' },
-        { key: 'favoriler-menu', icon: <HeartOutlined />, label: 'Favoriler' }, // ✅ menü
+        { key: 'favoriler-menu', icon: <HeartOutlined />, label: 'Favoriler' },
         { key: 'ayarlar', icon: <SettingOutlined />, label: 'Ayarlar' },
     ];
 
@@ -54,24 +55,42 @@ export default function SidebarLayout() {
 
     const handleMenuClick = ({ key }: { key: string }) => {
         setSelectedKey(key);
+
+        if (key === 'dashboard') {
+            setActiveTab('none');
+            navigate('/'); // ✅ dashboard ana rota
+            return;
+        }
+
         if (key === 'kullanicilar') {
             setActiveTab('kullanicilar');
             if (!openKeys.includes('kullanici-yonetimi')) setOpenKeys(prev => [...prev, 'kullanici-yonetimi']);
             navigate('/');
-        } else if (key === 'roller-yetkiler') {
+            return;
+        }
+
+        if (key === 'roller-yetkiler') {
             setActiveTab('none');
             if (!openKeys.includes('kullanici-yonetimi')) setOpenKeys(prev => [...prev, 'kullanici-yonetimi']);
             navigate('/');
-        } else if (key === 'urunler-menu') {
-            setActiveTab('none');
-            navigate('/products');              // ✅ Ürün listesi
-        } else if (key === 'favoriler-menu') {
-            setActiveTab('none');
-            navigate('/products/favorites');    // ✅ Favoriler
-        } else {
-            setActiveTab('none');
-            navigate('/');
+            return;
         }
+
+        if (key === 'urunler-menu') {
+            setActiveTab('none');
+            navigate('/products'); // ✅ Ürün listesi
+            return;
+        }
+
+        if (key === 'favoriler-menu') {
+            setActiveTab('none');
+            navigate('/products/favorites'); // ✅ Favoriler
+            return;
+        }
+
+        // diğer menüler şimdilik boş sayfa
+        setActiveTab('none');
+        navigate('/');
     };
 
     const computedSelectedKeys =
@@ -87,11 +106,22 @@ export default function SidebarLayout() {
             <Sider width={260} collapsedWidth={80} collapsible collapsed={collapsed} trigger={null} className="sider">
                 <div className="brand">
                     <span className="brand-text">Şirket Paneli</span>
-                    <Button type="text" className="sider-toggle" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
+                    <Button
+                        type="text"
+                        className="sider-toggle"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                    />
                 </div>
-                <Menu mode="inline" className="side-menu" items={sideItems}
-                    selectedKeys={computedSelectedKeys} openKeys={openKeys}
-                    onOpenChange={(keys) => setOpenKeys(keys as string[])} onClick={handleMenuClick}
+
+                <Menu
+                    mode="inline"
+                    className="side-menu"
+                    items={sideItems}
+                    selectedKeys={computedSelectedKeys}
+                    openKeys={openKeys}
+                    onOpenChange={(keys) => setOpenKeys(keys as string[])}
+                    onClick={handleMenuClick}
                 />
             </Sider>
 
@@ -101,34 +131,55 @@ export default function SidebarLayout() {
                     <div className="topbar-row">
                         <div className="topbar-right">
                             {user ? (
-                                <Dropdown trigger={['hover']} placement="bottomRight" arrow
-                                    menu={{ items: menuItems, onClick: ({ key }) => key === 'logout' && logout() }}>
+                                <Dropdown
+                                    trigger={['hover']}
+                                    placement="bottomRight"
+                                    arrow
+                                    menu={{ items: menuItems, onClick: ({ key }) => key === 'logout' && logout() }}
+                                >
                                     <div className="user-avatar" title={user.name}>{initial}</div>
                                 </Dropdown>
                             ) : (
-                                <button className="user-btn user-circle" onClick={openLogin} title="Giriş Yap"><UserOutlined /></button>
+                                <button className="user-btn user-circle" onClick={openLogin} title="Giriş Yap">
+                                    <UserOutlined />
+                                </button>
                             )}
                         </div>
                     </div>
 
                     {selectedKey === 'kullanicilar' && (
                         <div className="topbar-row topbar-tabs-row">
-                            <Tabs items={tabItems} activeKey={activeTab} onChange={(k) => setActiveTab(k as View)} className="top-tabs" centered />
+                            <Tabs
+                                items={tabItems}
+                                activeKey={activeTab}
+                                onChange={(k) => setActiveTab(k as View)}
+                                className="top-tabs"
+                                centered
+                            />
                         </div>
                     )}
                 </div>
 
                 <Content className="content-wrap">
                     <Routes>
+                        {/* Products feature routing */}
                         <Route path="/products/*" element={<ProductsRoutes />} />
+
+                        {/* Ana rota: dashboard veya kullanıcılar sekmeleri */}
                         <Route
                             path="/"
                             element={
-                                selectedKey !== 'kullanicilar'
-                                    ? <div className="content-blank" />
-                                    : activeTab === 'kullanicilar'
-                                        ? <UserTable onCountChange={setUserCount} />
-                                        : <ProductTable onCountChange={setProductCount} />
+                                selectedKey === 'dashboard' ? (
+                                    <DashboardPage />                              // ✅ Dashboard görünür
+                                ) : selectedKey === 'kullanicilar' ? (
+                                    activeTab === 'kullanicilar' ? (
+                                        <UserTable onCountChange={setUserCount} />
+                                    ) : (
+                                        <ProductTable onCountChange={setProductCount} />
+                                    )
+                                ) : (
+                                    <div className="content-blank" />             // diğer menüler: şimdilik boş
+                                )
                             }
                         />
                     </Routes>

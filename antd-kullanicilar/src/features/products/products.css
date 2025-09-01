@@ -481,3 +481,14 @@
 .grand-inline {
     font-weight: 800;
 }
+
+/* --- FAVORİLER sayfası özel --- */
+.favorites .card-cover {
+    height: 230px;
+    /* kutuyu aşağı genişlettik */
+}
+
+.favorites .card-body {
+    padding-bottom: 16px;
+    /* opsiyonel biraz daha boşluk */
+}

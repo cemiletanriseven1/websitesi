@@ -4,14 +4,14 @@ import { EyeOutlined, ShoppingCartOutlined, HeartFilled } from '@ant-design/icon
 import { PRODUCTS } from './data';
 import { useFavorites } from './favorites';
 import { Link } from 'react-router-dom';
-import './products.css'; // ✅ düzeltildi
+import './products.css'; // ✅ CSS dosyası
 
 export default function FavoritesPage() {
     const { favs } = useFavorites();
     const list = PRODUCTS.filter(p => favs.has(p.id));
 
     return (
-        <div className="products-page">
+        <div className="products-page favorites">  {/* ✅ ekstra 'favorites' class eklendi */}
             <div className="filter-bar">
                 <div style={{ fontWeight: 700 }}>Favoriler ({list.length})</div>
             </div>

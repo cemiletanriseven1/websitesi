@@ -14,12 +14,18 @@
 .brand {
     position: relative;
     padding: 8px 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* ⬅️ tam yatay merkez */
 }
 
 .brand-text {
     font-weight: 700;
     color: #111827;
     font-size: 18px;
+    text-align: center;
+    /* ⬅️ güvene almak için */
 }
 
 .sider .sider-toggle {
@@ -54,6 +60,19 @@
     font-weight: 600;
     /* vurguyu artır */
 }
+
+/* Kullanıcı Yönetimi hover'da beyaza dönmesin */
+.side-menu .ant-menu-submenu-title:hover .menu-label-with {
+    color: #263140 !important;
+    /* metin rengi sabit */
+}
+
+/* (İsteğe bağlı) yanındaki ok ikonunu da beyaz yapma */
+.side-menu .ant-menu-submenu-title:hover .menu-label-with .anticon,
+.side-menu .ant-menu-submenu-title:hover .menu-label-with .menu-drop {
+    color: #263140 !important;
+}
+
 
 /* Alt menü (submenu) içindeki item'lar da büyütülsün */
 .side-menu .ant-menu-submenu .ant-menu .ant-menu-item {

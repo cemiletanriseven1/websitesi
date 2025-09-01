@@ -1,0 +1,60 @@
+/* src/features/dashboard/dashboard.css */
+.dashboard-page {
+    padding: 16px;
+}
+
+.kpi-card .ant-statistic-title {
+    margin-bottom: 0;
+}
+
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    margin-right: 8px;
+}
+
+.kpi-blue {
+    background: #3b82f6;
+}
+
+.kpi-green {
+    background: #10b981;
+}
+
+.kpi-purple {
+    background: #8b5cf6;
+}
+
+.kpi-pink {
+    background: #ec4899;
+}
+
+.progress-block {
+    margin-bottom: 12px;
+}
+
+.progress-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.progress-meta {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.mini-legend {
+    margin-top: 4px;
+}
+
+.muted {
+    color: #6b7280;
+    font-size: 12px;
+}
