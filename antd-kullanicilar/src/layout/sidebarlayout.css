@@ -1,0 +1,224 @@
+/* Genel iskelet */
+.app-layout {
+    min-height: 100vh;
+    background: #f3f5f8;
+}
+
+/* SIDEBAR — eski açık gri */
+.sider {
+    background: #e9eef5;
+    border-right: 1px solid #dde3eb;
+    padding-top: 12px;
+}
+
+.brand {
+    position: relative;
+    padding: 8px 16px 16px;
+}
+
+.brand-text {
+    font-weight: 700;
+    color: #111827;
+    font-size: 18px;
+}
+
+.sider .sider-toggle {
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    color: #475569;
+}
+
+.sider.ant-layout-sider-collapsed .brand-text {
+    display: none;
+}
+
+.side-menu {
+    background: transparent;
+    border-inline-end: 0 !important;
+    padding: 0 8px;
+}
+
+/* Menü elemanları — daha büyük yazı + daha geniş dikey boşluk */
+.side-menu .ant-menu-item,
+.side-menu .ant-menu-submenu-title {
+    border-radius: 10px;
+    margin: 8px 12px;
+    /* boşluk arttı */
+    height: 48px;
+    /* yükseklik arttı */
+    line-height: 48px;
+    font-size: 16px;
+    /* yazı büyütüldü */
+    color: #263140;
+    font-weight: 600;
+    /* vurguyu artır */
+}
+
+/* Alt menü (submenu) içindeki item'lar da büyütülsün */
+.side-menu .ant-menu-submenu .ant-menu .ant-menu-item {
+    margin: 6px 12px;
+    height: 46px;
+    line-height: 46px;
+    font-size: 15.5px;
+}
+
+/* İkonlar bir tık büyük görünsün */
+.side-menu .ant-menu-item .anticon,
+.side-menu .ant-menu-submenu-title .anticon {
+    font-size: 18px;
+}
+
+/* RENKLER */
+:root {
+    --active: #223046;
+    /* tıklanmış */
+    --hover: #2b3a56;
+    /* bir tık açık */
+}
+
+/* Hover: bir tık açık — SEÇİLİ OLMAYANLARDA */
+.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
+.side-menu .ant-menu-submenu-title:hover {
+    background: var(--hover);
+    color: #fff;
+}
+
+.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover .anticon,
+.side-menu .ant-menu-submenu-title:hover .anticon {
+    color: #fff;
+}
+
+/* Selected: #223046 */
+.side-menu .ant-menu-item-selected,
+.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title {
+    background: var(--active);
+    color: #fff !important;
+}
+
+.side-menu .ant-menu-item-selected .anticon,
+.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title .anticon {
+    color: #fff;
+}
+
+/* Alt menü listesi şeffaf */
+.side-menu .ant-menu-submenu .ant-menu {
+    background: transparent;
+    margin-left: 8px;
+}
+
+/* MAIN */
+.main {
+    background: #f3f5f8;
+}
+
+/* === ÜST BAR (2 SATIR) ===
+   1. satır: sağda giriş/profil (avatar)
+   2. satır: ortada sekmeler (Kullanıcılar / Stok Durumu)
+*/
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid #eef1f5;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    /* iki satır */
+    gap: 8px;
+}
+
+/* Satır yardımcıları */
+.topbar-row {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.topbar-tabs-row {
+    justify-content: center;
+}
+
+/* Sekmeler */
+.top-tabs .ant-tabs-nav {
+    margin: 0;
+    justify-content: center;
+}
+
+.top-tabs .ant-tabs-tab {
+    padding: 8px 0;
+}
+
+.top-tabs .ant-tabs-tab-btn {
+    font-weight: 600;
+}
+
+/* İçerik */
+.content-wrap {
+    padding: 16px;
+}
+
+.content-blank {
+    height: calc(100vh - 16px - 16px);
+}
+
+/* === Sağ üst Giriş/Profil === */
+/* Giriş yoksa: ikonlu daire buton */
+.user-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    background: #223046;
+    /* butonlarla aynı mavi */
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.user-btn .anticon {
+    color: #fff;
+}
+
+.user-btn:hover {
+    filter: brightness(0.97);
+}
+
+.user-circle {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Giriş varsa: sadece BAŞ HARF avatar */
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #223046;
+    /* markanın mavisi */
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    letter-spacing: .2px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.user-avatar:hover {
+    filter: brightness(0.97);
+}
+
+/* (İsteğe bağlı) Dropdown menü için ufak kozmetik */
+.ant-dropdown-menu {
+    border-radius: 10px;
+}
