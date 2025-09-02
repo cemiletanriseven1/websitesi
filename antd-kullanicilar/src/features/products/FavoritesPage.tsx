@@ -1,33 +1,128 @@
 import React from 'react';
-import { Badge } from 'antd';
-import { EyeOutlined, ShoppingCartOutlined, HeartFilled } from '@ant-design/icons';
-import { PRODUCTS } from './data';
-import { useFavorites } from './favorites';
-import { Link } from 'react-router-dom';
-import './products.css'; // ✅ CSS dosyası
+import { Input, Select, Modal, Badge, Button, Segmented } from 'antd';
+import {
+    SearchOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined, HeartFilled,
+    PlusOutlined, MinusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined
+} from '@ant-design/icons';
+import './products.css';
+import { useProducts, Product, Category } from './store';
 
-export default function FavoritesPage() {
-    const { favs } = useFavorites();
-    const list = PRODUCTS.filter(p => favs.has(p.id));
+type CartItem = { product: Product; qty: number };
+
+export default function ProductsPage() {
+    const { products } = useProducts();
+
+    const [q, setQ] = React.useState('');
+    const [cat, setCat] = React.useState<'Tümü' | Category>('Tümü');
+    const [sort, setSort] = React.useState<'none' | 'fiyatArtan' | 'fiyatAzalan'>('none');
+
+    const [favs, setFavs] = React.useState<Set<string>>(new Set());
+    const [cart, setCart] = React.useState<Record<string, CartItem>>({});
+    const [detail, setDetail] = React.useState<Product | null>(null);
+
+    const filtered = React.useMemo(() => {
+        let arr = products.filter(p =>
+            (cat === 'Tümü' || p.category === cat) &&
+            (q.trim() === '' || p.title.toLowerCase().includes(q.toLowerCase()))
+        );
+        if (sort === 'fiyatArtan') arr = arr.slice().sort((a, b) => a.price - b.price);
+        if (sort === 'fiyatAzalan') arr = arr.slice().sort((a, b) => b.price - a.price);
+        return arr;
+    }, [q, cat, sort, products]);
+
+    const toggleFav = (id: string) =>
+        setFavs(prev => {
+            const n = new Set(prev);
+            n.has(id) ? n.delete(id) : n.add(id);
+            return n;
+        });
+
+    const addToCart = (p: Product) =>
+        setCart(prev => {
+            const ex = prev[p.id];
+            const qty = ex ? ex.qty + 1 : 1;
+            return { ...prev, [p.id]: { product: p, qty } };
+        });
+
+    const inc = (id: string) =>
+        setCart(prev => ({ ...prev, [id]: { ...prev[id], qty: prev[id].qty + 1 } }));
+
+    const dec = (id: string) =>
+        setCart(prev => {
+            const item = prev[id];
+            if (!item) return prev;
+            const qty = Math.max(1, item.qty - 1);
+            return { ...prev, [id]: { ...item, qty } };
+        });
+
+    const removeItem = (id: string) =>
+        setCart(prev => {
+            const copy = { ...prev };
+            delete copy[id];
+            return copy;
+        });
+
+    const clearCart = () => setCart({});
+
+    const cartItems = Object.values(cart);
+    const total = cartItems.reduce((s, it) => s + it.product.price * it.qty, 0);
 
     return (
-        <div className="products-page favorites">  {/* ✅ ekstra 'favorites' class eklendi */}
+        <div className="products-page">
+            {/* Üst filtre barı */}
             <div className="filter-bar">
-                <div style={{ fontWeight: 700 }}>Favoriler ({list.length})</div>
+                <Input
+                    allowClear
+                    prefix={<SearchOutlined />}
+                    placeholder="Ürün ara…"
+                    value={q}
+                    onChange={e => setQ(e.target.value)}
+                    className="filter-search"
+                />
+
+                <div className="filter-right">
+                    <Select
+                        value={cat}
+                        onChange={v => setCat(v)}
+                        className="filter-select"
+                        options={[
+                            { value: 'Tümü', label: 'Kategori' },
+                            { value: 'Elektronik', label: 'Elektronik' },
+                            { value: 'Mobilya', label: 'Mobilya' },
+                            { value: 'Aksesuar', label: 'Aksesuar' },
+                        ]}
+                    />
+                    <div className="segmented-sort">
+                        <Segmented
+                            value={sort}
+                            onChange={(v) => setSort(v as any)}
+                            options={[
+                                { value: 'none', label: 'Varsayılan' },
+                                { value: 'fiyatArtan', label: <span className="seg-lbl"><ArrowUpOutlined /> Artan</span> },
+                                { value: 'fiyatAzalan', label: <span className="seg-lbl"><ArrowDownOutlined /> Azalan</span> },
+                            ]}
+                        />
+                    </div>
+                </div>
             </div>
 
+            {/* İçerik: grid + sepet */}
             <div className="products-content">
                 <div className="grid">
-                    {list.map(p => (
+                    {filtered.map(p => (
                         <div key={p.id} className="card">
                             <div className="card-cover">
-                                {p.img && <img className="cover-img" src={p.img} alt={p.title} />}
-                                <button className="fav active" aria-label="Favori"><HeartFilled /></button>
+                                <img className="cover-img" src={p.img} alt={p.title}
+                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                <button className={`fav ${favs.has(p.id) ? 'active' : ''}`} onClick={() => toggleFav(p.id)} aria-label="Favorilere ekle">
+                                    {favs.has(p.id) ? <HeartFilled /> : <HeartOutlined />}
+                                </button>
                                 <div className="hover-actions">
-                                    <Link to={`/products/${p.id}`} className="circle" title="Detay"><EyeOutlined /></Link>
-                                    <button className="circle" title="Sepete Ekle"><ShoppingCartOutlined /></button>
+                                    <button className="circle" title="Detay" onClick={() => setDetail(p)}><EyeOutlined /></button>
+                                    <button className="circle" title="Sepete Ekle" onClick={() => addToCart(p)}><ShoppingCartOutlined /></button>
                                 </div>
                             </div>
+
                             <div className="card-body">
                                 <div className="title" title={p.title}>{p.title}</div>
                                 <div className="sub">{p.category}</div>
@@ -38,11 +133,69 @@ export default function FavoritesPage() {
                             </div>
                         </div>
                     ))}
-                    {list.length === 0 && (
-                        <div style={{ gridColumn: '1/-1', color: '#6b7280' }}>Henüz favori ürün yok.</div>
-                    )}
                 </div>
+
+                {/* Sepet paneli — (değişmedi) */}
+                <aside className="cart">
+                    <div className="cart-head">
+                        <div className="cart-title">Sepetim</div>
+                        <Badge count={cartItems.length} />
+                    </div>
+                    <div className="cart-body">
+                        {cartItems.length === 0 ? (
+                            <div className="cart-empty">Sepetiniz boş</div>
+                        ) : cartItems.map(({ product, qty }) => (
+                            <div key={product.id} className="cart-row">
+                                <div className="cart-info">
+                                    <div className="cart-name">{product.title}</div>
+                                    <div className="cart-price">{product.price.toLocaleString('tr-TR')} ₺</div>
+                                </div>
+                                <div className="cart-qty">
+                                    <Button size="small" onClick={() => dec(product.id)} icon={<MinusOutlined />} />
+                                    <span className="q">{qty}</span>
+                                    <Button size="small" onClick={() => inc(product.id)} icon={<PlusOutlined />} />
+                                </div>
+                                <Button size="small" className="cart-remove" onClick={() => removeItem(product.id)} icon={<DeleteOutlined />} />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="cart-foot">
+                        <div className="cart-total">
+                            <span>Toplam</span>
+                            <b>{total.toLocaleString('tr-TR')} ₺</b>
+                        </div>
+                        <div className="cart-actions">
+                            <Button onClick={clearCart}>Sepeti Temizle</Button>
+                            <Button type="primary" className="btn-brand">Ödeme Yap</Button>
+                        </div>
+                    </div>
+                </aside>
             </div>
+
+            {/* Ürün Detay Modalı */}
+            <Modal
+                title="Ürün Detayı"
+                open={!!detail}
+                onCancel={() => setDetail(null)}
+                footer={[
+                    <Button key="close" onClick={() => setDetail(null)}>Kapat</Button>,
+                    detail ? <Button key="add" type="primary" className="btn-brand" onClick={() => { addToCart(detail); setDetail(null); }}>Sepete Ekle</Button> : null,
+                ]}
+                centered
+                width={520}
+            >
+                {detail && (
+                    <div className="detail">
+                        <div className="detail-img">{detail.img && <img src={detail.img} alt={detail.title} />}</div>
+                        <div className="detail-info">
+                            <div className="d-title">{detail.title}</div>
+                            <div className="d-sub">{detail.category} • Stok: {detail.stock}</div>
+                            <div className="d-desc">{detail.desc || 'Bu ürün hakkında açıklama yakında eklenecek.'}</div>
+                            <div className="d-price">{detail.price.toLocaleString('tr-TR')} ₺</div>
+                        </div>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }

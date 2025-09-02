@@ -17,7 +17,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* ⬅️ tam yatay merkez */
 }
 
 .brand-text {
@@ -25,7 +24,6 @@
     color: #111827;
     font-size: 18px;
     text-align: center;
-    /* ⬅️ güvene almak için */
 }
 
 .sider .sider-toggle {
@@ -45,36 +43,82 @@
     padding: 0 8px;
 }
 
-/* Menü elemanları — daha büyük yazı + daha geniş dikey boşluk */
+/* AntD'nin submenu okunu tamamen gizle (çift ok olmasın) */
+.side-menu .ant-menu-submenu-expand-icon,
+.side-menu .ant-menu-submenu-arrow {
+    display: none !important;
+}
+
+/* Menü elemanları */
 .side-menu .ant-menu-item,
 .side-menu .ant-menu-submenu-title {
     border-radius: 10px;
     margin: 8px 12px;
-    /* boşluk arttı */
     height: 48px;
-    /* yükseklik arttı */
     line-height: 48px;
     font-size: 16px;
-    /* yazı büyütüldü */
     color: #263140;
     font-weight: 600;
-    /* vurguyu artır */
 }
 
-/* Kullanıcı Yönetimi hover'da beyaza dönmesin */
+/* Özel chevron (senin tasarım) */
+.menu-label-with {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chevrons {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    transition: transform .25s ease;
+}
+
+.chevrons::before,
+.chevrons::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+    opacity: .9;
+    color: currentColor;
+}
+
+.chevrons::after {
+    top: 4px;
+    transform: rotate(45deg) scale(.75);
+    opacity: .7;
+}
+
+/* kapalıyken aşağı baksın (0deg) */
+.chevrons {
+    transform: rotate(180deg);
+}
+
+/* açıkken yukarı baksın */
+.chevrons.open {
+    transform: rotate(0deg);
+}
+
+/* Hover renkleri */
 .side-menu .ant-menu-submenu-title:hover .menu-label-with {
     color: #263140 !important;
-    /* metin rengi sabit */
 }
 
-/* (İsteğe bağlı) yanındaki ok ikonunu da beyaz yapma */
 .side-menu .ant-menu-submenu-title:hover .menu-label-with .anticon,
 .side-menu .ant-menu-submenu-title:hover .menu-label-with .menu-drop {
     color: #263140 !important;
 }
 
-
-/* Alt menü (submenu) içindeki item'lar da büyütülsün */
+/* Alt menü item'ları */
 .side-menu .ant-menu-submenu .ant-menu .ant-menu-item {
     margin: 6px 12px;
     height: 46px;
@@ -82,21 +126,18 @@
     font-size: 15.5px;
 }
 
-/* İkonlar bir tık büyük görünsün */
+/* İkonlar biraz büyük */
 .side-menu .ant-menu-item .anticon,
 .side-menu .ant-menu-submenu-title .anticon {
     font-size: 18px;
 }
 
-/* RENKLER */
+/* Renk değişkenleri */
 :root {
     --active: #223046;
-    /* tıklanmış */
     --hover: #2b3a56;
-    /* bir tık açık */
 }
 
-/* Hover: bir tık açık — SEÇİLİ OLMAYANLARDA */
 .side-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
 .side-menu .ant-menu-submenu-title:hover {
     background: var(--hover);
@@ -108,7 +149,6 @@
     color: #fff;
 }
 
-/* Selected: #223046 */
 .side-menu .ant-menu-item-selected,
 .side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title {
     background: var(--active);
@@ -120,7 +160,6 @@
     color: #fff;
 }
 
-/* Alt menü listesi şeffaf */
 .side-menu .ant-menu-submenu .ant-menu {
     background: transparent;
     margin-left: 8px;
@@ -131,21 +170,16 @@
     background: #f3f5f8;
 }
 
-/* === ÜST BAR (2 SATIR) ===
-   1. satır: sağda giriş/profil (avatar)
-   2. satır: ortada sekmeler (Kullanıcılar / Stok Durumu)
-*/
+/* Üst bar */
 .topbar {
     background: #ffffff;
     border-bottom: 1px solid #eef1f5;
     padding: 8px 16px;
     display: flex;
     flex-direction: column;
-    /* iki satır */
     gap: 8px;
 }
 
-/* Satır yardımcıları */
 .topbar-row {
     display: flex;
     align-items: center;
@@ -161,7 +195,6 @@
     justify-content: center;
 }
 
-/* Sekmeler */
 .top-tabs .ant-tabs-nav {
     margin: 0;
     justify-content: center;
@@ -184,8 +217,7 @@
     height: calc(100vh - 16px - 16px);
 }
 
-/* === Sağ üst Giriş/Profil === */
-/* Giriş yoksa: ikonlu daire buton */
+/* Kullanıcı buton/avatari */
 .user-btn {
     display: inline-flex;
     align-items: center;
@@ -193,7 +225,6 @@
     height: 36px;
     padding: 0 12px;
     background: #223046;
-    /* butonlarla aynı mavi */
     color: #fff;
     border: none;
     border-radius: 18px;
@@ -216,13 +247,11 @@
     border-radius: 50%;
 }
 
-/* Giriş varsa: sadece BAŞ HARF avatar */
 .user-avatar {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     background: #223046;
-    /* markanın mavisi */
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -237,7 +266,67 @@
     filter: brightness(0.97);
 }
 
-/* (İsteğe bağlı) Dropdown menü için ufak kozmetik */
 .ant-dropdown-menu {
     border-radius: 10px;
+}
+
+/* src/features/dashboard/dashboard.css */
+.dashboard-page {
+    padding: 16px;
+}
+
+.kpi-card .ant-statistic-title {
+    margin-bottom: 0;
+}
+
+.kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    margin-right: 8px;
+}
+
+.kpi-blue {
+    background: #3b82f6;
+}
+
+.kpi-green {
+    background: #10b981;
+}
+
+.kpi-purple {
+    background: #8b5cf6;
+}
+
+.kpi-pink {
+    background: #ec4899;
+}
+
+.progress-block {
+    margin-bottom: 12px;
+}
+
+.progress-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.progress-meta {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.mini-legend {
+    margin-top: 4px;
+}
+
+.muted {
+    color: #6b7280;
+    font-size: 12px;
 }

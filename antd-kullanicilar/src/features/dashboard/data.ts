@@ -1,5 +1,4 @@
 // Mock veri – API bağlayınca burayı service ile değiştirirsin
-
 export const kpis = {
     activeUsers: 124,
     departments: 12,

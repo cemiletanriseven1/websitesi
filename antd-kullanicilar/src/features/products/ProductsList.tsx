@@ -5,13 +5,14 @@ import {
     HeartOutlined, HeartFilled
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { PRODUCTS, Product, Category } from './data';
-import { useFavorites } from './favorites';
 import './products.css';
+import { useProducts, Product, Category } from './store';   // ⬅️ store'dan al
+import { useFavorites } from './favorites';
 
 type CartItem = { product: Product; qty: number };
 
 export default function ProductsList() {
+    const { products } = useProducts();                       // ⬅️ dinamik liste
     const [q, setQ] = React.useState('');
     const [cat, setCat] = React.useState<'Tümü' | Category>('Tümü');
     const [sort, setSort] = React.useState<'none' | 'fiyatArtan' | 'fiyatAzalan'>('none');
@@ -20,27 +21,34 @@ export default function ProductsList() {
     const navigate = useNavigate();
 
     const filtered = React.useMemo(() => {
-        let arr = PRODUCTS.filter(p =>
+        let arr = products.filter(p =>
             (cat === 'Tümü' || p.category === cat) &&
             (q.trim() === '' || p.title.toLowerCase().includes(q.toLowerCase()))
         );
         if (sort === 'fiyatArtan') arr = arr.slice().sort((a, b) => a.price - b.price);
         if (sort === 'fiyatAzalan') arr = arr.slice().sort((a, b) => b.price - a.price);
         return arr;
-    }, [q, cat, sort]);
+    }, [q, cat, sort, products]);                               // ⬅️ products dependency
 
     const addToCart = (p: Product) =>
-        setCart(prev => { const ex = prev[p.id]; const qty = ex ? ex.qty + 1 : 1; return { ...prev, [p.id]: { product: p, qty } }; });
+        setCart(prev => {
+            const ex = prev[p.id];
+            const qty = ex ? ex.qty + 1 : 1;
+            return { ...prev, [p.id]: { product: p, qty } };
+        });
 
     const inc = (id: string) => setCart(prev => ({ ...prev, [id]: { ...prev[id], qty: prev[id].qty + 1 } }));
-    const dec = (id: string) => setCart(prev => { const it = prev[id]; if (!it) return prev; const qty = Math.max(1, it.qty - 1); return { ...prev, [id]: { ...it, qty } }; });
+    const dec = (id: string) => setCart(prev => {
+        const it = prev[id]; if (!it) return prev;
+        const qty = Math.max(1, it.qty - 1);
+        return { ...prev, [id]: { ...it, qty } };
+    });
     const removeItem = (id: string) => setCart(prev => { const c = { ...prev }; delete c[id]; return c; });
     const clearCart = () => setCart({});
 
     const cartItems = Object.values(cart);
     const total = cartItems.reduce((s, it) => s + it.product.price * it.qty, 0);
 
-    // localStorage'a yaz (checkout özetinde okunacak)
     React.useEffect(() => {
         try { localStorage.setItem('cart', JSON.stringify(cart)); } catch { }
     }, [cart]);
@@ -51,11 +59,9 @@ export default function ProductsList() {
                 <Input allowClear prefix={<SearchOutlined />} placeholder="Ürün ara…" value={q} onChange={e => setQ(e.target.value)} className="filter-search" />
                 <div className="filter-right">
                     <Select value={cat} onChange={v => setCat(v)} className="filter-select"
-                        options={[{ value: 'Tümü', label: 'Kategori' }, { value: 'Elektronik', label: 'Elektronik' }, { value: 'Mobilya', label: 'Mobilya' }, { value: 'Aksesuar', label: 'Aksesuar' }]}
-                    />
+                        options={[{ value: 'Tümü', label: 'Kategori' }, { value: 'Elektronik', label: 'Elektronik' }, { value: 'Mobilya', label: 'Mobilya' }, { value: 'Aksesuar', label: 'Aksesuar' }]} />
                     <Select value={sort} onChange={v => setSort(v)} className="filter-select filter-select-sort"
-                        options={[{ value: 'none', label: 'Sırala' }, { value: 'fiyatArtan', label: 'Fiyat (Artan)' }, { value: 'fiyatAzalan', label: 'Fiyat (Azalan)' }]}
-                    />
+                        options={[{ value: 'none', label: 'Sırala' }, { value: 'fiyatArtan', label: 'Fiyat (Artan)' }, { value: 'fiyatAzalan', label: 'Fiyat (Azalan)' }]} />
                 </div>
             </div>
 
@@ -110,11 +116,7 @@ export default function ProductsList() {
                         <div className="cart-total"><span>Toplam</span><b>{total.toLocaleString('tr-TR')} ₺</b></div>
                         <div className="cart-actions">
                             <Button onClick={clearCart}>Sepeti Temizle</Button>
-                            <Button
-                                type="primary"
-                                className="btn-brand"
-                                onClick={() => navigate('/products/checkout', { state: { cart } })}
-                            >
+                            <Button type="primary" className="btn-brand" onClick={() => navigate('/products/checkout', { state: { cart } })}>
                                 Ödeme Yap
                             </Button>
                         </div>

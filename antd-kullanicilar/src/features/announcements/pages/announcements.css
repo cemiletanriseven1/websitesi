@@ -1,0 +1,79 @@
+.ann-page {
+    padding: 16px;
+}
+
+/* Başlık ortada, büyük ve koyu */
+.ann-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    color: #223046;
+    /* markanın koyu rengi */
+    margin: 0 0 24px;
+}
+
+/* 4 sütunluk responsive grid */
+.ann-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+@media (max-width: 1200px) {
+    .ann-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .ann-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .ann-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Duyuru kartları */
+.ann-card {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+}
+
+.ann-card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.ann-dot {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.ann-card-title {
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.ann-card-desc {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.ann-card-foot {
+    margin-top: auto;
+    color: #6b7280;
+    font-size: 12px;
+    text-align: right;
+}
