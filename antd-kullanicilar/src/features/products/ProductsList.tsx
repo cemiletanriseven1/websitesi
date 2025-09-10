@@ -1,18 +1,18 @@
 import React from 'react';
-import { Input, Select, Badge, Button } from 'antd';
+import { Input, Select, Button } from 'antd';
 import {
     SearchOutlined, EyeOutlined, ShoppingCartOutlined,
     HeartOutlined, HeartFilled
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import './products.css';
-import { useProducts, Product, Category } from './store';   // ⬅️ store'dan al
+import { useProducts, Product, Category } from './store';
 import { useFavorites } from './favorites';
 
 type CartItem = { product: Product; qty: number };
 
 export default function ProductsList() {
-    const { products } = useProducts();                       // ⬅️ dinamik liste
+    const { products } = useProducts();
     const [q, setQ] = React.useState('');
     const [cat, setCat] = React.useState<'Tümü' | Category>('Tümü');
     const [sort, setSort] = React.useState<'none' | 'fiyatArtan' | 'fiyatAzalan'>('none');
@@ -28,7 +28,7 @@ export default function ProductsList() {
         if (sort === 'fiyatArtan') arr = arr.slice().sort((a, b) => a.price - b.price);
         if (sort === 'fiyatAzalan') arr = arr.slice().sort((a, b) => b.price - a.price);
         return arr;
-    }, [q, cat, sort, products]);                               // ⬅️ products dependency
+    }, [q, cat, sort, products]);
 
     const addToCart = (p: Product) =>
         setCart(prev => {
@@ -85,7 +85,7 @@ export default function ProductsList() {
                                 <div className="sub">{p.category}</div>
                                 <div className="price">
                                     <span>{p.price.toLocaleString('tr-TR')} ₺</span>
-                                    <Badge count={p.stock} title="Stok" style={{ backgroundColor: '#e9eef5', color: '#334155' }} />
+                                    <span style={{ color: '#000' }}>Stok: {p.stock}</span>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@ export default function ProductsList() {
                 </div>
 
                 <aside className="cart">
-                    <div className="cart-head"><div className="cart-title">Sepetim</div><Badge count={cartItems.length} /></div>
+                    <div className="cart-head"><div className="cart-title">Sepetim</div><span>{cartItems.length}</span></div>
                     <div className="cart-body">
                         {cartItems.length === 0 ? (
                             <div className="cart-empty">Sepetiniz boş</div>

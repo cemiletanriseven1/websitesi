@@ -1,16 +1,31 @@
-/* Genel iskelet */
+/* ========== LAYOUT ISKELET ========== */
 .app-layout {
     min-height: 100vh;
     background: #f3f5f8;
 }
 
-/* SIDEBAR — eski açık gri */
+/* ========== SIDEBAR ========== */
 .sider {
     background: #e9eef5;
     border-right: 1px solid #dde3eb;
     padding-top: 12px;
 }
 
+/* Açık genişlik */
+.ant-layout-sider {
+    width: 232px !important;
+    max-width: 232px !important;
+    flex: 0 0 232px !important;
+}
+
+/* Kapalı genişlik */
+.ant-layout-sider-collapsed {
+    width: 72px !important;
+    max-width: 72px !important;
+    flex: 0 0 72px !important;
+}
+
+/* Brand (başlık) */
 .brand {
     position: relative;
     padding: 8px 16px 16px;
@@ -37,47 +52,119 @@
     display: none;
 }
 
+/* ========== MENÜ ========== */
 .side-menu {
     background: transparent;
     border-inline-end: 0 !important;
     padding: 0 8px;
 }
 
-/* AntD'nin submenu okunu tamamen gizle (çift ok olmasın) */
+/* AntD’nin default okunu gizle (kendi chevron’umuz var) */
 .side-menu .ant-menu-submenu-expand-icon,
 .side-menu .ant-menu-submenu-arrow {
     display: none !important;
 }
 
-/* Menü elemanları */
+/* Ana item + submenu başlığı (AÇIKKEN) — yazıları SOLA YAKLAŞTIR */
 .side-menu .ant-menu-item,
 .side-menu .ant-menu-submenu-title {
     border-radius: 10px;
-    margin: 8px 12px;
+    margin: 8px 6px;
     height: 48px;
     line-height: 48px;
     font-size: 16px;
-    color: #263140;
     font-weight: 600;
+    color: #263140;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+
+    padding-left: 6px !important;
+    padding-right: 32px !important;
+    position: relative;
 }
 
-/* Özel chevron (senin tasarım) */
+/* Şirket paneli altındaki (submenu içindeki) item’ları da daha sola yasla */
+.side-menu .ant-menu-submenu .ant-menu .ant-menu-item {
+    margin: 6px 6px;
+    padding-left: 6px !important;
+    height: 46px;
+    line-height: 46px;
+    font-size: 15.5px;
+}
+
+/* İkon boyutu */
+.side-menu .ant-menu-item .anticon,
+.side-menu .ant-menu-submenu-title .anticon {
+    font-size: 18px;
+}
+
+/* Hover — METİN SİYAH/DARK, arka plan açık */
+:root {
+    --active: #223046;
+    --hover-bg: #e6edf6;
+}
+
+.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
+.side-menu .ant-menu-submenu-title:hover {
+    background: var(--hover-bg);
+    color: #111827 !important;
+}
+
+.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover .anticon,
+.side-menu .ant-menu-submenu-title:hover .anticon {
+    color: #111827 !important;
+}
+
+/* Selected — koyu arkaplan üzerinde beyaz */
+.side-menu .ant-menu-item-selected,
+.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title {
+    background: var(--active);
+    color: #fff !important;
+}
+
+/* Seçiliyken ikon & chevron beyaz */
+.side-menu .ant-menu-item-selected .anticon,
+.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title .anticon {
+    color: #fff !important;
+}
+
+.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title .chevrons {
+    color: #fff !important;
+}
+
+/* Submenu iç menüsü */
+.side-menu .ant-menu-submenu .ant-menu {
+    background: transparent;
+    margin-left: 8px;
+}
+
+/* ========== CHEVRON (OK) — görünsün, taşmasın ========== */
 .menu-label-with {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: normal;
 }
 
-.chevrons {
-    position: relative;
+.side-menu .ant-menu-submenu-title .chevrons {
+    position: absolute;
+    right: 12px;
+    top: 50%;
     width: 12px;
     height: 12px;
-    display: inline-block;
-    transition: transform .25s ease;
+    transform: translateY(-50%) rotate(180deg);
+    transition: transform .25s ease, color .15s ease;
+    color: #111827;
+    display: inline-block !important;
+    z-index: 1;
+    pointer-events: none;
 }
 
-.chevrons::before,
-.chevrons::after {
+.side-menu .ant-menu-submenu-title .chevrons::before,
+.side-menu .ant-menu-submenu-title .chevrons::after {
     content: '';
     position: absolute;
     left: 0;
@@ -87,90 +174,106 @@
     border-width: 0 2px 2px 0;
     width: 8px;
     height: 8px;
-    transform: rotate(45deg);
     opacity: .9;
     color: currentColor;
+    transform: rotate(45deg);
 }
 
-.chevrons::after {
+.side-menu .ant-menu-submenu-title .chevrons::after {
     top: 4px;
     transform: rotate(45deg) scale(.75);
     opacity: .7;
 }
 
-/* kapalıyken aşağı baksın (0deg) */
-.chevrons {
-    transform: rotate(180deg);
+.side-menu .ant-menu-submenu-title .chevrons.open {
+    transform: translateY(-50%) rotate(0deg);
 }
 
-/* açıkken yukarı baksın */
-.chevrons.open {
-    transform: rotate(0deg);
+/* ========== COLLAPSED — ikonlar TAM ORTADA ve görünür ========== */
+
+/* Sider içerik kesmesin */
+.sider,
+.sider .ant-layout-sider-children {
+    overflow: visible;
 }
 
-/* Hover renkleri */
-.side-menu .ant-menu-submenu-title:hover .menu-label-with {
-    color: #263140 !important;
+/* collapsed iken menünün dış padding’i ikonları daraltmasın */
+.ant-menu-inline-collapsed.side-menu {
+    padding: 0 6px;
 }
 
-.side-menu .ant-menu-submenu-title:hover .menu-label-with .anticon,
-.side-menu .ant-menu-submenu-title:hover .menu-label-with .menu-drop {
-    color: #263140 !important;
+/* item’ı %100 genişlikte flex-center yap */
+.ant-menu-inline-collapsed .ant-menu-item,
+.ant-menu-inline-collapsed .ant-menu-submenu-title {
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 56px;
+    line-height: 56px;
+    padding: 0 !important;
+    margin: 8px 6px !important;
+    text-align: center;
+    overflow: visible !important;
 }
 
-/* Alt menü item'ları */
-.side-menu .ant-menu-submenu .ant-menu .ant-menu-item {
-    margin: 6px 12px;
-    height: 46px;
-    line-height: 46px;
-    font-size: 15.5px;
+/* (YENİ) Submenu başlıklarının ikonlarını collapsed’ta zorla göster ve ortala */
+.ant-menu-inline-collapsed .ant-menu-submenu>.ant-menu-submenu-title {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-/* İkonlar biraz büyük */
-.side-menu .ant-menu-item .anticon,
+.side-menu .ant-menu-submenu-title .ant-menu-item-icon,
 .side-menu .ant-menu-submenu-title .anticon {
-    font-size: 18px;
+    display: inline-flex !important;
+    visibility: visible !important;
 }
 
-/* Renk değişkenleri */
-:root {
-    --active: #223046;
-    --hover: #2b3a56;
+.ant-menu-inline-collapsed .ant-menu-submenu>.ant-menu-submenu-title .ant-menu-item-icon,
+.ant-menu-inline-collapsed .ant-menu-submenu>.ant-menu-submenu-title .anticon {
+    margin: 0 !important;
+    font-size: 22px !important;
 }
 
-.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
-.side-menu .ant-menu-submenu-title:hover {
-    background: var(--hover);
-    color: #fff;
+/* metni tamamen gizle */
+.ant-menu-inline-collapsed .ant-menu-title-content {
+    display: none !important;
 }
 
-.side-menu .ant-menu-item:not(.ant-menu-item-selected):hover .anticon,
-.side-menu .ant-menu-submenu-title:hover .anticon {
-    color: #fff;
+/* ikonları büyüt & ortala (genel) */
+.ant-menu-inline-collapsed .ant-menu-item .ant-menu-item-icon,
+.ant-menu-inline-collapsed .ant-menu-submenu-title .ant-menu-item-icon,
+.ant-menu-inline-collapsed .ant-menu-item .anticon,
+.ant-menu-inline-collapsed .ant-menu-submenu-title .anticon {
+    display: inline-flex !important;
+    visibility: visible !important;
+    font-size: 22px !important;
+    margin: 0 !important;
+    color: #263140 !important;
 }
 
-.side-menu .ant-menu-item-selected,
-.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title {
-    background: var(--active);
+/* inline svg’ler gizlenmesin */
+.ant-menu-inline-collapsed .anticon svg {
+    display: block !important;
+}
+
+/* seçiliyken ikon beyaz */
+.ant-menu-inline-collapsed .ant-menu-item-selected .anticon,
+.ant-menu-inline-collapsed .ant-menu-submenu-selected>.ant-menu-submenu-title .anticon {
     color: #fff !important;
 }
 
-.side-menu .ant-menu-item-selected .anticon,
-.side-menu .ant-menu-submenu-selected>.ant-menu-submenu-title .anticon {
-    color: #fff;
+/* Kapalı sidebar’da okları gizle (sadece ikonlar kalsın) */
+.ant-menu-inline-collapsed .chevrons {
+    display: none !important;
 }
 
-.side-menu .ant-menu-submenu .ant-menu {
-    background: transparent;
-    margin-left: 8px;
-}
-
-/* MAIN */
+/* ========== MAIN / TOPBAR ========== */
 .main {
     background: #f3f5f8;
 }
 
-/* Üst bar */
 .topbar {
     background: #ffffff;
     border-bottom: 1px solid #eef1f5;
@@ -217,7 +320,7 @@
     height: calc(100vh - 16px - 16px);
 }
 
-/* Kullanıcı buton/avatari */
+/* Kullanıcı butonu/avatareleri */
 .user-btn {
     display: inline-flex;
     align-items: center;
@@ -270,7 +373,7 @@
     border-radius: 10px;
 }
 
-/* src/features/dashboard/dashboard.css */
+/* ========== DASHBOARD MINOR ========== */
 .dashboard-page {
     padding: 16px;
 }
@@ -319,7 +422,6 @@
 .progress-meta {
     color: #6b7280;
     font-size: 12px;
-    margin-top: 4px;
 }
 
 .mini-legend {
@@ -329,4 +431,27 @@
 .muted {
     color: #6b7280;
     font-size: 12px;
+}
+
+/* Açıkken yazı boyutu ve sol hizalama */
+.ant-layout-sider .ant-menu .ant-menu-submenu-title,
+.ant-layout-sider .ant-menu .ant-menu-item {
+    text-align: left;
+    font-size: 15.5px;
+    line-height: 1.25;
+}
+
+/* Brand’ı biraz sıkılaştır */
+.sider .brand {
+    padding: 10px 10px;
+}
+
+.brand .brand-text {
+    margin-left: 6px;
+}
+
+/* Settings switch: site mavisi */
+.switch-brand.ant-switch-checked {
+    background-color: #1677ff !important;
+    border-color: #1677ff !important;
 }

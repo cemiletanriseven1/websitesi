@@ -130,3 +130,290 @@
 .users-card .ant-table-filter-trigger {
     color: #9aa1a9;
 }
+
+/* ... mevcut stilleriniz aynen kalsın ... */
+
+/* STOCK: yazılar biraz daha büyük */
+.stock-table .ant-table-thead>tr>th {
+    font-size: 15.5px;
+}
+
+.stock-table .ant-table-tbody>tr>td {
+    font-size: 15.5px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* --- Var olan stillerin altına EKLEYİN --- */
+
+/* Evrensel "pill" rozetleri (markaya uyumlu) */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 12.5px;
+    border-radius: 9999px;
+    border: 1px solid #e7ebf2;
+    background: #f6f8fb;
+    color: #223046;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.pill-dark {
+    background: #223046;
+    color: #fff;
+    border-color: #223046;
+}
+
+.pill-dark .dot {
+    background: #fff;
+}
+
+.pill-purple {
+    background: #f3efff;
+    color: #5138b3;
+    border-color: #e6e1ff;
+}
+
+.pill-purple .dot {
+    background: #8b5cf6;
+}
+
+.pill-muted {
+    background: #eef2f7;
+    color: #334155;
+    border-color: #e1e7ef;
+}
+
+.pill-muted .dot {
+    background: #94a3b8;
+}
+
+/* Stok rozeti (yine soft tonlar) */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 12.5px;
+    border-radius: 8px;
+    border: 1px solid #e7ebf2;
+    background: #f6f8fb;
+    color: #223046;
+}
+
+.badge-green {
+    background: #eefcf6;
+    border-color: #d9f7e8;
+    color: #0f7b4b;
+}
+
+.badge-amber {
+    background: #fff8e6;
+    border-color: #ffe9b3;
+    color: #7a5b00;
+}
+
+.badge-red {
+    background: #fff1f0;
+    border-color: #ffd3cf;
+    color: #b42318;
+}
+
+/* STOCK: daha büyük hücreler (diğer isteğinle birlikte) */
+.stock-table .ant-table-thead>tr>th {
+    font-size: 15.5px;
+}
+
+.stock-table .ant-table-tbody>tr>td {
+    font-size: 15.5px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* ======= Minimal, marka uyumlu rozetler ======= */
+
+/* Abonelik tipi (Kullanıcılar) */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    font-size: 12.5px;
+    border-radius: 999px;
+    border: 1px solid #E6EAF2;
+    background: #F7F9FC;
+    color: #223046;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.chip--annual {
+    background: #EEF2FF;
+    color: #4338CA;
+    border-color: #E0E7FF;
+}
+
+.chip--annual .dot {
+    background: #6366F1;
+}
+
+.chip--monthly {
+    background: #FDF2F8;
+    color: #BE185D;
+    border-color: #FCE7F3;
+}
+
+.chip--monthly .dot {
+    background: #F472B6;
+}
+
+.chip--free {
+    background: #F1F5F9;
+    color: #334155;
+    border-color: #E2E8F0;
+}
+
+.chip--free .dot {
+    background: #94A3B8;
+}
+
+/* Stok sayısı */
+.badge-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    border-radius: 8px;
+    border: 1px solid #E6EAF2;
+    background: #F7F9FC;
+    color: #223046;
+}
+
+.badge-num--ok {
+    background: #ECFDF5;
+    border-color: #D1FAE5;
+    color: #047857;
+}
+
+.badge-num--low {
+    background: #FFF7ED;
+    border-color: #FFEDD5;
+    color: #9A3412;
+}
+
+.badge-num--zero {
+    background: #FEF2F2;
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+/* İzin durum rozetleri */
+.status-chip {
+    composes: chip;
+}
+
+/* PostCSS yoksa aynı tanımı tekrar edelim: */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    font-size: 12.5px;
+    border-radius: 999px;
+    border: 1px solid #E6EAF2;
+    background: #F7F9FC;
+    color: #223046;
+    line-height: 1;
+}
+
+.status-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.status--pending {
+    background: #F5F3FF;
+    color: #5B21B6;
+    border-color: #EDE9FE;
+}
+
+.status--pending .dot {
+    background: #8B5CF6;
+}
+
+.status--approved {
+    background: #ECFDF5;
+    color: #047857;
+    border-color: #D1FAE5;
+}
+
+.status--approved .dot {
+    background: #10B981;
+}
+
+.status--rejected {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-color: #FECACA;
+}
+
+.status--rejected .dot {
+    background: #EF4444;
+}
+
+/* STOCK tabloda yazıları biraz büyük tutmaya devam */
+.stock-table .ant-table-thead>tr>th {
+    font-size: 15.5px;
+}
+
+.stock-table .ant-table-tbody>tr>td {
+    font-size: 15.5px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* Belgeler sayfası ortak stiller (buton/drag alanı görünümü) */
+.documents-card .ant-card-head-title {
+    font-weight: 800;
+    color: #223046;
+}
+
+.doc-dragger {
+    width: 100%;
+    border-radius: 12px !important;
+    border-color: #e7ebf2 !important;
+    background: #fafbfd !important;
+}
+
+.doc-dragger:hover {
+    border-color: #cfd7e6 !important;
+    background: #f7f9fc !important;
+}
+
+/* Abonelik metni: siyah, kutusuz */
+.plan-text {
+    color: #111;
+    font-weight: 500;
+}

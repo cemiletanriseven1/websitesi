@@ -1,41 +1,38 @@
 import React from 'react';
-import { Input, Select, Modal, Badge, Button, Segmented } from 'antd';
+import { Input, Select, Segmented, Button, Modal, Badge } from 'antd';
 import {
     SearchOutlined, EyeOutlined, ShoppingCartOutlined, HeartOutlined, HeartFilled,
-    PlusOutlined, MinusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined
+    ArrowUpOutlined, ArrowDownOutlined
 } from '@ant-design/icons';
 import './products.css';
 import { useProducts, Product, Category } from './store';
+import { useFavorites } from './favorites';
+import { useNavigate } from 'react-router-dom';
 
 type CartItem = { product: Product; qty: number };
 
-export default function ProductsPage() {
+export default function FavoritesPage() {
     const { products } = useProducts();
+    const { favs, has, toggle } = useFavorites();
+    const navigate = useNavigate();
 
     const [q, setQ] = React.useState('');
     const [cat, setCat] = React.useState<'Tümü' | Category>('Tümü');
     const [sort, setSort] = React.useState<'none' | 'fiyatArtan' | 'fiyatAzalan'>('none');
 
-    const [favs, setFavs] = React.useState<Set<string>>(new Set());
     const [cart, setCart] = React.useState<Record<string, CartItem>>({});
     const [detail, setDetail] = React.useState<Product | null>(null);
 
     const filtered = React.useMemo(() => {
         let arr = products.filter(p =>
+            favs.has(p.id) &&
             (cat === 'Tümü' || p.category === cat) &&
             (q.trim() === '' || p.title.toLowerCase().includes(q.toLowerCase()))
         );
         if (sort === 'fiyatArtan') arr = arr.slice().sort((a, b) => a.price - b.price);
         if (sort === 'fiyatAzalan') arr = arr.slice().sort((a, b) => b.price - a.price);
         return arr;
-    }, [q, cat, sort, products]);
-
-    const toggleFav = (id: string) =>
-        setFavs(prev => {
-            const n = new Set(prev);
-            n.has(id) ? n.delete(id) : n.add(id);
-            return n;
-        });
+    }, [q, cat, sort, products, favs]);
 
     const addToCart = (p: Product) =>
         setCart(prev => {
@@ -49,37 +46,34 @@ export default function ProductsPage() {
 
     const dec = (id: string) =>
         setCart(prev => {
-            const item = prev[id];
-            if (!item) return prev;
-            const qty = Math.max(1, item.qty - 1);
-            return { ...prev, [id]: { ...item, qty } };
+            const it = prev[id]; if (!it) return prev;
+            const qty = Math.max(1, it.qty - 1);
+            return { ...prev, [id]: { ...it, qty } };
         });
 
     const removeItem = (id: string) =>
-        setCart(prev => {
-            const copy = { ...prev };
-            delete copy[id];
-            return copy;
-        });
+        setCart(prev => { const c = { ...prev }; delete c[id]; return c; });
 
     const clearCart = () => setCart({});
 
     const cartItems = Object.values(cart);
     const total = cartItems.reduce((s, it) => s + it.product.price * it.qty, 0);
 
+    React.useEffect(() => {
+        try { localStorage.setItem('cart', JSON.stringify(cart)); } catch { }
+    }, [cart]);
+
     return (
-        <div className="products-page">
-            {/* Üst filtre barı */}
+        <div className="products-page favorites">
             <div className="filter-bar">
                 <Input
                     allowClear
                     prefix={<SearchOutlined />}
-                    placeholder="Ürün ara…"
+                    placeholder="Favorilerde ara…"
                     value={q}
                     onChange={e => setQ(e.target.value)}
                     className="filter-search"
                 />
-
                 <div className="filter-right">
                     <Select
                         value={cat}
@@ -106,16 +100,15 @@ export default function ProductsPage() {
                 </div>
             </div>
 
-            {/* İçerik: grid + sepet */}
             <div className="products-content">
+                {/* Grid */}
                 <div className="grid">
                     {filtered.map(p => (
                         <div key={p.id} className="card">
                             <div className="card-cover">
-                                <img className="cover-img" src={p.img} alt={p.title}
-                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                                <button className={`fav ${favs.has(p.id) ? 'active' : ''}`} onClick={() => toggleFav(p.id)} aria-label="Favorilere ekle">
-                                    {favs.has(p.id) ? <HeartFilled /> : <HeartOutlined />}
+                                {p.img && <img className="cover-img" src={p.img} alt={p.title} />}
+                                <button className={`fav ${has(p.id) ? 'active' : ''}`} onClick={() => toggle(p.id)} aria-label="Favoriler">
+                                    {has(p.id) ? <HeartFilled /> : <HeartOutlined />}
                                 </button>
                                 <div className="hover-actions">
                                     <button className="circle" title="Detay" onClick={() => setDetail(p)}><EyeOutlined /></button>
@@ -128,19 +121,20 @@ export default function ProductsPage() {
                                 <div className="sub">{p.category}</div>
                                 <div className="price">
                                     <span>{p.price.toLocaleString('tr-TR')} ₺</span>
-                                    <Badge count={p.stock} title="Stok" style={{ backgroundColor: '#e9eef5', color: '#334155' }} />
+                                    <span style={{ color: '#000' }}>Stok: {p.stock}</span>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Sepet paneli — (değişmedi) */}
+                {/* Sepet paneli — Ürünler sayfasıyla aynı düzen */}
                 <aside className="cart">
                     <div className="cart-head">
                         <div className="cart-title">Sepetim</div>
                         <Badge count={cartItems.length} />
                     </div>
+
                     <div className="cart-body">
                         {cartItems.length === 0 ? (
                             <div className="cart-empty">Sepetiniz boş</div>
@@ -151,50 +145,39 @@ export default function ProductsPage() {
                                     <div className="cart-price">{product.price.toLocaleString('tr-TR')} ₺</div>
                                 </div>
                                 <div className="cart-qty">
-                                    <Button size="small" onClick={() => dec(product.id)} icon={<MinusOutlined />} />
+                                    <Button size="small" onClick={() => dec(product.id)}>-</Button>
                                     <span className="q">{qty}</span>
-                                    <Button size="small" onClick={() => inc(product.id)} icon={<PlusOutlined />} />
+                                    <Button size="small" onClick={() => inc(product.id)}>+</Button>
                                 </div>
-                                <Button size="small" className="cart-remove" onClick={() => removeItem(product.id)} icon={<DeleteOutlined />} />
+                                <Button size="small" className="cart-remove" onClick={() => removeItem(product.id)}>Sil</Button>
                             </div>
                         ))}
                     </div>
+
                     <div className="cart-foot">
-                        <div className="cart-total">
-                            <span>Toplam</span>
-                            <b>{total.toLocaleString('tr-TR')} ₺</b>
-                        </div>
+                        <div className="cart-total"><span>Toplam</span><b>{total.toLocaleString('tr-TR')} ₺</b></div>
                         <div className="cart-actions">
                             <Button onClick={clearCart}>Sepeti Temizle</Button>
-                            <Button type="primary" className="btn-brand">Ödeme Yap</Button>
+                            <Button
+                                type="primary"
+                                className="btn-brand"
+                                onClick={() => navigate('/products/checkout', { state: { cart } })}
+                            >
+                                Ödeme Yap
+                            </Button>
                         </div>
                     </div>
                 </aside>
             </div>
 
-            {/* Ürün Detay Modalı */}
-            <Modal
-                title="Ürün Detayı"
-                open={!!detail}
-                onCancel={() => setDetail(null)}
-                footer={[
-                    <Button key="close" onClick={() => setDetail(null)}>Kapat</Button>,
-                    detail ? <Button key="add" type="primary" className="btn-brand" onClick={() => { addToCart(detail); setDetail(null); }}>Sepete Ekle</Button> : null,
-                ]}
-                centered
-                width={520}
-            >
-                {detail && (
-                    <div className="detail">
-                        <div className="detail-img">{detail.img && <img src={detail.img} alt={detail.title} />}</div>
-                        <div className="detail-info">
-                            <div className="d-title">{detail.title}</div>
-                            <div className="d-sub">{detail.category} • Stok: {detail.stock}</div>
-                            <div className="d-desc">{detail.desc || 'Bu ürün hakkında açıklama yakında eklenecek.'}</div>
-                            <div className="d-price">{detail.price.toLocaleString('tr-TR')} ₺</div>
-                        </div>
+            {/* Detay modalı */}
+            <Modal open={!!detail} onCancel={() => setDetail(null)} footer={null} title={detail?.title}>
+                {detail ? (
+                    <div>
+                        <div className="muted">{detail.category} • Stok: {detail.stock}</div>
+                        <p style={{ marginTop: 8 }}>{detail.desc || 'Açıklama yakında.'}</p>
                     </div>
-                )}
+                ) : null}
             </Modal>
         </div>
     );

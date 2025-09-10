@@ -484,11 +484,15 @@
 
 /* --- FAVORİLER sayfası özel --- */
 .favorites .card-cover {
-    height: 230px;
+    height: 180px;
     /* kutuyu aşağı genişlettik */
 }
 
 .favorites .card-body {
-    padding-bottom: 16px;
+    padding-bottom: 12px;
     /* opsiyonel biraz daha boşluk */
+}
+
+.favorites .card-body .title {
+    font-size: 14px;
 }

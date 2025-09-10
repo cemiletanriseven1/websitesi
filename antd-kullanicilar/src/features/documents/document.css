@@ -1,0 +1,19 @@
+/* src/features/documents/pages/documents.css */
+
+/* Card başlığı ve dragger görünümü */
+.documents-card .ant-card-head-title {
+    font-weight: 800;
+    color: #223046;
+}
+
+.doc-dragger {
+    width: 360px;
+    border-radius: 12px !important;
+    border-color: #e7ebf2 !important;
+    background: #fafbfd !important;
+}
+
+.doc-dragger:hover {
+    border-color: #cfd7e6 !important;
+    background: #f7f9fc !important;
+}

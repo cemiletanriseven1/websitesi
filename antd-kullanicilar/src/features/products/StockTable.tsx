@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Table, Tag } from 'antd';
+import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PRODUCTS, Product } from './data';
 
@@ -17,7 +17,7 @@ export default function StockTable({ onCountChange }: Props) {
             title: 'Stok',
             dataIndex: 'stock',
             key: 'stock',
-            render: (s: number) => <Tag color={s > 0 ? 'green' : 'red'}>{s}</Tag>,
+            render: (s: number) => <span style={{ color: '#000' }}>{s}</span>,
             sorter: (a, b) => a.stock - b.stock,
         },
         {

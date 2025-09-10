@@ -1,16 +1,9 @@
 import React from 'react';
-import { Input, Select, Modal, Badge, Button, Segmented } from 'antd';
+import { Input, Select, Modal, Button, Segmented } from 'antd';
 import {
-    SearchOutlined,
-    EyeOutlined,
-    ShoppingCartOutlined,
-    HeartOutlined,
-    HeartFilled,
-    PlusOutlined,
-    MinusOutlined,
-    DeleteOutlined,
-    ArrowUpOutlined,
-    ArrowDownOutlined
+    SearchOutlined, EyeOutlined, ShoppingCartOutlined,
+    HeartOutlined, HeartFilled, PlusOutlined, MinusOutlined, DeleteOutlined,
+    ArrowUpOutlined, ArrowDownOutlined
 } from '@ant-design/icons';
 import './products.css';
 
@@ -26,7 +19,7 @@ type Product = {
 };
 
 const PRODUCTS: Product[] = [
-    { id: 'p1', title: 'Dizüstü Bilgisayar', price: 2450, category: 'Elektronik', stock: 5, img: '/assets/products/laptop.jpg', desc: '14\" IPS, 16GB RAM, 512GB SSD' },
+    { id: 'p1', title: 'Dizüstü Bilgisayar', price: 2450, category: 'Elektronik', stock: 5, img: '/assets/products/laptop.jpg', desc: '14" IPS, 16GB RAM, 512GB SSD' },
     { id: 'p2', title: 'Kablosuz Kulaklık', price: 1850, category: 'Elektronik', stock: 10, img: '/assets/products/earbuds.jpg', desc: 'Aktif gürültü engelleme' },
     { id: 'p3', title: 'Gaming Mouse', price: 600, category: 'Elektronik', stock: 17, img: '/assets/products/mouse.jpg', desc: '16000 DPI, RGB' },
     { id: 'p4', title: 'Mekanik Klavye', price: 950, category: 'Elektronik', stock: 8, img: '/assets/products/keyboard.jpg', desc: 'Kailh Brown switch' },
@@ -120,7 +113,6 @@ export default function ProductsPage() {
                         ]}
                     />
 
-                    {/* Daha anlaşılır sıralama: ikonlu Segmented */}
                     <div className="segmented-sort">
                         <Segmented
                             value={sort}
@@ -141,7 +133,6 @@ export default function ProductsPage() {
                     {filtered.map(p => (
                         <div key={p.id} className="card">
                             <div className="card-cover">
-                                {/* Ürün görseli */}
                                 <img
                                     className="cover-img"
                                     src={p.img}
@@ -149,7 +140,6 @@ export default function ProductsPage() {
                                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                                 />
 
-                                {/* Favori kalbi her zaman görünür */}
                                 <button
                                     className={`fav ${favs.has(p.id) ? 'active' : ''}`}
                                     onClick={() => toggleFav(p.id)}
@@ -158,7 +148,6 @@ export default function ProductsPage() {
                                     {favs.has(p.id) ? <HeartFilled /> : <HeartOutlined />}
                                 </button>
 
-                                {/* Hover aksiyonları */}
                                 <div className="hover-actions">
                                     <button className="circle" title="Detay" onClick={() => setDetail(p)}><EyeOutlined /></button>
                                     <button className="circle" title="Sepete Ekle" onClick={() => addToCart(p)}><ShoppingCartOutlined /></button>
@@ -170,7 +159,8 @@ export default function ProductsPage() {
                                 <div className="sub">{p.category}</div>
                                 <div className="price">
                                     <span>{p.price.toLocaleString('tr-TR')} ₺</span>
-                                    <Badge count={p.stock} title="Stok" style={{ backgroundColor: '#e9eef5', color: '#334155' }} />
+                                    {/* Stok sade siyah metin */}
+                                    <span style={{ fontWeight: 600, color: '#111827' }}>{p.stock}</span>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +171,7 @@ export default function ProductsPage() {
                 <aside className="cart">
                     <div className="cart-head">
                         <div className="cart-title">Sepetim</div>
-                        <Badge count={cartItems.length} />
+                        <span>{cartItems.length}</span>
                     </div>
 
                     <div className="cart-body">
@@ -216,7 +206,6 @@ export default function ProductsPage() {
                 </aside>
             </div>
 
-            {/* Ürün Detay Modalı */}
             <Modal
                 title="Ürün Detayı"
                 open={!!detail}

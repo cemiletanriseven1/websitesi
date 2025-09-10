@@ -294,7 +294,16 @@ export default function DashboardPage() {
             </Modal>
 
             {/* Yeni Ürün */}
-            <Modal title="Yeni Ürün Ekle" open={createOpen} onOk={createProduct} onCancel={() => setCreateOpen(false)} okText="Kaydet">
+            <Modal
+                title="Yeni Ürün Ekle"
+                open={createOpen}
+                onOk={createProduct}
+                onCancel={() => setCreateOpen(false)}
+                okText="Kaydet"
+                cancelText="Sil"
+                okButtonProps={{ className: 'btn-brand' }}
+                cancelButtonProps={{ className: 'btn-danger-ghost' }}
+            >
                 <Form layout="vertical" form={pForm}>
                     <Form.Item label="Ürün Adı" name="title" rules={[{ required: true }]}><Input /></Form.Item>
                     <Form.Item label="Kategori" name="category" rules={[{ required: true }]}>
@@ -312,7 +321,16 @@ export default function DashboardPage() {
             </Modal>
 
             {/* Duyuru yayınla */}
-            <Modal title="Duyuru Yayınla" open={annOpen} onOk={publishAnnouncement} onCancel={() => setAnnOpen(false)} okText="Yayınla">
+            <Modal
+                title="Duyuru Yayınla"
+                open={annOpen}
+                onOk={publishAnnouncement}
+                onCancel={() => setAnnOpen(false)}
+                okText="Kaydet"
+                cancelText="Sil"
+                okButtonProps={{ className: 'btn-brand' }}
+                cancelButtonProps={{ className: 'btn-danger-ghost' }}
+            >
                 <Form layout="vertical" form={aForm}>
                     <Form.Item label="Başlık" name="title" rules={[{ required: true }]}><Input /></Form.Item>
                     <Form.Item label="Tarih (GG.AA.YYYY)" name="date" initialValue={dayjs().format('DD.MM.YYYY')}>
